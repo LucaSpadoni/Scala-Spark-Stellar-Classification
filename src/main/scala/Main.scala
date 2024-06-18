@@ -1,19 +1,9 @@
-import org.apache.spark.input.PortableDataStream
-import org.apache.spark.ml.Pipeline
 import org.apache.spark.ml.classification.{RandomForestClassificationModel, RandomForestClassifier}
 import org.apache.spark.ml.evaluation.MulticlassClassificationEvaluator
-import org.apache.spark.ml.feature.{IndexToString, StringIndexer, VectorAssembler, VectorIndexer}
-import org.apache.spark.{SparkConf, SparkContext}
+import org.apache.spark.ml.feature.VectorAssembler
 import org.apache.spark.sql.{DataFrame, Row, SparkSession}
-import org.apache.spark.ml.image.ImageSchema
-import org.apache.spark.mllib.evaluation.MulticlassMetrics
-import org.apache.spark.rdd.RDD
-import org.apache.spark.mllib.linalg.Vectors
-import org.apache.spark.mllib.regression.LabeledPoint
-import org.apache.spark.mllib.tree.RandomForest
 import org.apache.spark.sql.functions.{col, when}
 import org.apache.spark.sql.types.{DoubleType, IntegerType, StringType, StructField, StructType}
-import org.apache.spark.{SparkConf, SparkContext}
 import Utils.measureTime
 
 object Main {
@@ -95,13 +85,13 @@ object Main {
 
   private def readData(spark: SparkSession, schema: StructType): DataFrame = {
     println("\n Reading the dataset...")
-
     spark.read
       .option("header", true)
       .option("delimiter", ",")
       .schema(schema)
       .csv("data/star_classification.csv")
-      .limit(100000) // Only read the first 10000 rows for testing
+      //.csv("gs://scalableproject/star_classification.csv")
+      .limit(10000) // Only read the first 10000 rows for testing
       .na.drop() // Drop rows with null values
   }
 
